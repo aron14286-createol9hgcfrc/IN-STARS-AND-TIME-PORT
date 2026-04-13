@@ -1,21 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0">
-    <title>In Stars and Time</title>
-    
-    <!-- FIXED: Correct working CDN path -->
-    <base href="https://cdn.jsdelivr.net/gh/ports-for-web/in-stars-and-time@latest/">
-    
-    <link rel="stylesheet" href="fonts/gamefont.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-L7856P3VNT"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-L7856P3VNT');
+  </script>
+
+  <base href="https://cdn.jsdelivr.net/gh/web-ports/in-stars-and-time@3a5cc49c0cbbefa7740c5bb88eb196ee089fd3b0/">
+  <link rel="icon" href="icon/icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="icon/icon.png">
+  <link rel="stylesheet" href="fonts/gamefont.css">
+  <title>IN STARS AND TIME v1.0.6.3</title>
+
+  <style>
+    body { background-color: black; margin: 0; overflow: hidden; }
+    #sidebarad1, #sidebarad2 { position: fixed; top: 50%; transform: translateY(-50%); width: 160px; height: 600px; z-index: 999999; }
+    #sidebarad1 { left: 0; }
+    #sidebarad2 { right: 0; }
+    .sidebar-close { position: absolute; top: 0; right: 0; width: 22px; height: 22px; background: rgba(0,0,0,0.7); color: #fff; cursor: pointer; text-align: center; }
+  </style>
 </head>
-<body style="background:black; margin:0;">
+<body>
+  <script src="js/libs/pixi.js"></script>
+  <script src="js/libs/pixi-tilemap.js"></script>
+  <script src="js/libs/pixi-picture.js"></script>
+  <script src="js/libs/fpsmeter.js"></script>
+  <script src="js/libs/lz-string.js"></script>
+  <script src="js/libs/iphone-inline-video.browser.js"></script>
 
-    <!-- Game Libraries -->
-    <script src="js/libs/pixi.js"></script>
-    <!-- You likely need the main game script here -->
-    <script src="js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/nipplejs@0.9.0/dist/nipplejs.min.js"></script>
 
+  <script src="js/rpg_core.js"></script>
+  <script src="js/rpg_managers.js"></script>
+  <script src="js/rpg_objects.js"></script>
+  <script src="js/rpg_scenes.js"></script>
+  <script src="js/rpg_sprites.js"></script>
+  <script src="js/rpg_windows.js"></script>
+  <script src="js/plugins.js"></script>
+  <script src="js/main.js"></script>
+
+  <script>
+    function applycanvasmode() {
+      const canvas = document.querySelector("#GameCanvas");
+      const video = document.querySelector("#GameVideo");
+      const upper = document.querySelector("#UpperCanvas");
+      if (!canvas) return;
+      let maxW = window.innerWidth;
+      let maxH = window.innerHeight;
+      let w, h;
+      if ((maxW * 0.75) > maxH) {
+        h = maxH;
+        w = Math.floor((maxH / 3) * 4);
+      } else {
+        w = maxW;
+        h = Math.floor((maxW / 4) * 3);
+      }
+      [canvas, video, upper].forEach(el => {
+        if (el) {
+          el.style.width = w + "px";
+          el.style.height = h + "px";
+        }
+      });
+    }
+    setInterval(applycanvasmode, 100);
+
+    (function() {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      if (!isMobile) return;
+      const i = setInterval(() => {
+        if (window.fullSetupComplete && window.nipplejs && window.fakeInput) {
+          const zone = document.createElement("div");
+          zone.style = "position: fixed; bottom: 0; left: 0; z-index: 9999; width: 200px; height: 200px;";
+          document.body.appendChild(zone);
+          nipplejs.create({ zone, mode: 'static', position: { left: '100px', bottom: '100px' }, color: 'white' })
+            .on("dir", (e, data) => {
+              ["up", "down", "left", "right"].forEach(d => d === data.direction.angle ? fakeInput.down(d) : fakeInput.up(d));
+            })
+            .on("end", () => {
+              ["up", "down", "left", "right"].forEach(d => fakeInput.up(d));
+            });
+          clearInterval(i);
+        }
+      }, 100);
+    })();
+
+    fetch("data/Translations.json").then(res => res.json()).then(json => {
+      window.$dataTranslations = json;
+    });
+  </script>
 </body>
 </html>
