@@ -1,11 +1,13 @@
-<!DOCTYPE html>
+
+\<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="viewport" content="user-scalable=no">
-    <base href="https://cdn.jsdelivr.net/gh/web-ports/in-stars-and-time@3a5cc49c0cbbefa7740c5bb88eb196ee089fd3b0/">
+    <!-- CHANGED: Use latest version instead of broken commit -->
+    <base href="https://cdn.jsdelivr.net/gh/web-ports/in-stars-and-time/">
     <link rel="icon" href="icon/icon.png" type="image/png">
     <link rel="apple-touch-icon" href="icon/icon.png">
     <link rel="stylesheet" type="text/css" href="fonts/gamefont.css">
@@ -32,7 +34,7 @@
     <script src="js/main.js"></script>
 
     <script>
-        // Auto-resize canvas to fit screen
+        // Auto-resize canvas
         function resizeCanvas() {
             const canvas = document.querySelector("#GameCanvas");
             const video = document.querySelector("#GameVideo");
@@ -43,25 +45,16 @@
             let w = window.innerWidth;
             let h = window.innerHeight;
             
-            // 4:3 aspect ratio
             if ((w * 0.75) > h) {
                 w = Math.floor((h / 3) * 4);
             } else {
                 h = Math.floor((w / 4) * 3);
             }
             
-            if (canvas) {
-                canvas.style.width = w + "px";
-                canvas.style.height = h + "px";
-            }
-            if (video) {
-                video.style.width = w + "px";
-                video.style.height = h + "px";
-            }
-            if (upper) {
-                upper.style.width = w + "px";
-                upper.style.height = h + "px";
-            }
+            canvas.style.width = w + "px";
+            canvas.style.height = h + "px";
+            if (video) video.style.width = w + "px", video.style.height = h + "px";
+            if (upper) upper.style.width = w + "px", upper.style.height = h + "px";
         }
         
         window.addEventListener('resize', resizeCanvas);
